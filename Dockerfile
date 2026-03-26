@@ -1,5 +1,6 @@
-FROM python:3.9
-COPY calc.py /app/calc.py
-ENV PYTHONUNBUFFERED=1
-ENTRYPOINT ["python", "/app/calc.py"]
-CMD ["--help"]
+FROM nginx:alpine
+COPY default.conf /etc/nginx/conf.d/default.conf
+COPY index.html /usr/share/nginx/html/
+COPY style.css /usr/share/nginx/html/
+COPY script.js /usr/share/nginx/html/
+EXPOSE 80
