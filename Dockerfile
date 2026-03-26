@@ -1,7 +1,5 @@
-FROM node:16
-WORKDIR /app
-COPY package*.json /app/
-RUN npm install
-COPY . /app
-EXPOSE 3000
-CMD ["npm", "start"]
+FROM python:3.9
+COPY calc.py /app/calc.py
+ENV PYTHONUNBUFFERED=1
+ENTRYPOINT ["python", "/app/calc.py"]
+CMD ["--help"]
