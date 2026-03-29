@@ -1,28 +1,18 @@
 FROM python:3.9
-
-ADD data.tar.gz /opt/data
-
-ENV APP_MODE=python
+SHELL ["/bin/bash", "-c"]
+ARG BUILD_MODE=dev
+RUN echo "$BUILD_MODE"
+LABEL version="1.0" maintainer="gb"
+RUN adduser "gbq38u"
+WORKDIR /home/myapp
+VOLUME /home/myapp/data
+ONBUILD COPY . /home/myapp/extra
+STOPSIGNAL SIGQUIT
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
+  CMD curl -f http://localhost:8080 || exit 1
+COPY app.py /home/myapp
+RUN pip install flask
 ENV PORT=8080
-ENV PYTHONUNBUFFERED=1
-
-WORKDIR /app
-
-ADD assets.tar.gz /app/assets
-
-COPY requirements.txt /app/
-COPY package*.json /app/
-COPY flask_app.py /app/
-COPY node_app.js /app/
-COPY entrypoint.sh /app/
-
-RUN apt-get update && apt-get install -y nodejs npm
-
-RUN npm install
-RUN pip install --no-cache-dir -r requirements.txt
-
 EXPOSE 8080
+CMD ["python", "app.py"]
 
-RUN chmod +x /app/entrypoint.sh
-
-ENTRYPOINT ["/app/entrypoint.sh"]
