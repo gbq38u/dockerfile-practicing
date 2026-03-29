@@ -1,0 +1,3 @@
+FROM my-java-base
+
+WORKDIR /app
